@@ -523,10 +523,10 @@
 
         .pricing-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
             margin-top: 60px;
-            max-width: 1000px;
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -534,7 +534,7 @@
         .pricing-card {
             background: white;
             border-radius: 10px;
-            padding: 40px 30px;
+            padding: 30px 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             position: relative;
             transition: transform 0.3s;
@@ -1054,7 +1054,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">🤖</div>
                     <h3>AI-Powered Insights</h3>
-                    <p>Gemini AI integration for thumbnail analysis, title optimization, and viral potential prediction. Get content suggestions that actually work.</p>
+                    <p>Gemini AI integration (upcoming) for thumbnail analysis, title optimization, and viral potential prediction. Get content suggestions that actually work.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📁</div>
@@ -1335,7 +1335,7 @@
                         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 12px 15px; color: white;">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <h3 style="margin: 0; font-size: 16px; font-weight: bold;">🤖 AI Insights</h3>
-                                <span style="background: white; color: #667eea; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">Gemini AI</span>
+                                <span style="background: white; color: #667eea; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">Gemini AI (Upcoming)</span>
                             </div>
                         </div>
                         <!-- AI Analysis Content -->
@@ -1965,16 +1965,32 @@
 
             <div class="pricing-cards">
                 <div class="pricing-card">
+                    <h3 class="plan-name">FREE</h3>
+                    <div class="plan-price">$0<span>/month</span></div>
+                    <p class="plan-description">Perfect for beginners</p>
+                    <ul class="plan-features">
+                        <li>Track up to 10 channels</li>
+                        <li>5 daily searches (channels/videos)</li>
+                        <li>5 daily analytics views</li>
+                        <li>1 YouTube API key</li>
+                        <li>❌ No notifications</li>
+                        <li>CSV data export</li>
+                    </ul>
+                    <button class="plan-button">Get Started</button>
+                </div>
+
+                <div class="pricing-card">
                     <h3 class="plan-name">Starter</h3>
                     <div class="plan-price">$9.99<span>/month</span></div>
                     <p class="plan-description">For individual creators</p>
                     <ul class="plan-features">
                         <li>Track up to 50 channels</li>
-                        <li>10 daily channel searches</li>
-                        <li>20 daily ranking views</li>
-                        <li>5 daily analytics views</li>
-                        <li>1 YouTube API key</li>
+                        <li>30 daily searches (channels/videos)</li>
+                        <li>50 daily analytics views</li>
+                        <li>2 YouTube API keys</li>
+                        <li>🔔 Browser notifications (3/day)</li>
                         <li>CSV data export</li>
+                        <li>Email support</li>
                     </ul>
                     <button class="plan-button">Start Free Trial</button>
                 </div>
@@ -1982,28 +1998,37 @@
                 <div class="pricing-card featured">
                     <span class="featured-badge">MOST POPULAR</span>
                     <h3 class="plan-name">Professional</h3>
-                    <div class="plan-price">$29.99<span>/month</span></div>
+                    <div class="plan-price">$19.99<span>/month</span></div>
                     <p class="plan-description">For serious content creators</p>
                     <ul class="plan-features">
                         <li>Track up to 200 channels</li>
-                        <li><strong style="color: #10b981;">⚡ Unlimited channel searches</strong></li>
-                        <li><strong style="color: #10b981;">⚡ Unlimited ranking views</strong></li>
-                        <li><strong style="color: #10b981;">⚡ Unlimited analytics</strong></li>
+                        <li>100 daily searches (channels/videos)</li>
+                        <li>200 daily analytics views</li>
                         <li>3 YouTube API keys</li>
-                        <li>Excel/CSV export</li>
+                        <li>🔔 Browser notifications (3/day)</li>
+                        <li>🔔 New video alerts</li>
+                        <li>💬 Telegram alerts</li>
+                        <li>🤖 AI analysis (Gemini - upcoming)</li>
+                        <li>Excel/CSV data export</li>
+                        <li>Priority email support</li>
                     </ul>
                     <button class="plan-button primary">Start Free Trial</button>
                 </div>
 
                 <div class="pricing-card">
                     <h3 class="plan-name">Enterprise</h3>
-                    <div class="plan-price">$79.99<span>/month</span></div>
+                    <div class="plan-price">Custom<span> pricing</span></div>
                     <p class="plan-description">For agencies & teams</p>
                     <ul class="plan-features">
                         <li><strong style="color: #10b981;">⚡ Unlimited channels</strong></li>
-                        <li>Unlimited ranking views</li>
-                        <li>Unlimited analytics</li>
+                        <li><strong style="color: #10b981;">⚡ Unlimited searches</strong></li>
+                        <li><strong style="color: #10b981;">⚡ Unlimited analytics</strong></li>
                         <li><strong style="color: #10b981;">⚡ Unlimited API keys</strong></li>
+                        <li>Multiple user accounts</li>
+                        <li>Team collaboration features</li>
+                        <li>All notification types</li>
+                        <li>Excel/CSV/JSON export</li>
+                        <li>API access</li>
                         <li>White-label options</li>
                         <li>Dedicated account manager</li>
                     </ul>
