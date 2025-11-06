@@ -686,6 +686,21 @@
                     <div class="calculator-value"><span id="signupsValue">10</span> new subscribers</div>
                 </div>
 
+                <!-- 12-Month Tier Visualization Bar -->
+                <div style="margin: 30px 0; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="font-size: 14px; font-weight: 600; color: #2c3e50; margin-bottom: 12px; text-align: center;">
+                        📊 Your Tier Progression Over 12 Months
+                    </div>
+                    <div id="monthTimeline" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px;">
+                        <!-- 12 month bars will be populated by JavaScript -->
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: #7f8c8d;">
+                        <span>Month 1</span>
+                        <span>Month 6</span>
+                        <span>Month 12</span>
+                    </div>
+                </div>
+
                 <div class="calculator-result">
                     <!-- Tier Display -->
                     <div id="tierDisplay" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 16px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
@@ -908,6 +923,7 @@
             let cumulativeSales = 0;
             let previousTier = null;
             const tierUpgrades = [];
+            const monthlyTiers = []; // Track tier for each month
 
             for (let month = 1; month <= 12; month++) {
                 // Add new sales for this month
@@ -916,6 +932,13 @@
                 // Get commission rate based on cumulative sales (tier progression)
                 const commissionRate = getTierCommission(cumulativeSales);
                 const currentTier = getTierInfo(cumulativeSales);
+
+                // Store tier for this month
+                monthlyTiers.push({
+                    month: month,
+                    tier: currentTier,
+                    sales: cumulativeSales
+                });
 
                 // Track tier upgrades
                 if (previousTier && currentTier.id > previousTier.id) {
@@ -948,6 +971,9 @@
             const finalCommissionRate = getTierCommission(yearEndSubscribers);
             const month12Revenue = yearEndSubscribers * avgPlanPrice * finalCommissionRate;
 
+            // Update 12-month visualization bar
+            updateMonthTimeline(monthlyTiers);
+
             // Update tier display
             updateTierDisplay(yearEndSubscribers);
 
@@ -959,6 +985,35 @@
             totalSubscribers.textContent = yearEndSubscribers;
             annualEarnings.textContent = totalAnnualEarnings.toLocaleString('en-US', {maximumFractionDigits: 0});
             month12Earnings.textContent = month12Revenue.toLocaleString('en-US', {maximumFractionDigits: 0});
+        }
+
+        // Update 12-month tier visualization bar
+        function updateMonthTimeline(monthlyTiers) {
+            const timelineEl = document.getElementById('monthTimeline');
+            let html = '';
+
+            monthlyTiers.forEach((monthData) => {
+                const tier = monthData.tier;
+                html += `
+                    <div style="
+                        background: ${tier.color};
+                        height: 60px;
+                        border-radius: 6px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        position: relative;
+                        transition: all 0.3s ease;
+                        cursor: pointer;
+                    " title="Month ${monthData.month}: ${tier.name} (${tier.commission}%) - ${monthData.sales} sales">
+                        <div style="font-size: 16px;">${tier.emoji}</div>
+                        <div style="font-size: 10px; color: white; font-weight: 600; margin-top: 2px;">${tier.commission}%</div>
+                    </div>
+                `;
+            });
+
+            timelineEl.innerHTML = html;
         }
 
         // Update tier timeline display
