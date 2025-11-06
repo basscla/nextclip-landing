@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextClip Affiliate Program - Earn 30% Lifetime Commission</title>
-    <meta name="description" content="Join NextClip's affiliate program and earn 30% lifetime recurring commission. Special launch offer - lock in your rate before March 2026!">
+    <meta name="description" content="Join NextClip's affiliate program and earn 30% lifetime recurring commission. Special launch offer - lock in your rate until March 31, 2026!">
     <style>
         * {
             margin: 0;
@@ -538,7 +538,7 @@
     <section class="hero">
         <div class="container">
             <h1>🚀 Earn 30% Lifetime Commission<br>with NextClip Affiliate Program</h1>
-            <p>Special Launch Offer: Lock in 30% recurring commission for life! Join before March 2026 and start earning passive income.</p>
+            <p>Special Launch Offer: Lock in 30% recurring commission for life! Join until March 31, 2026 and start earning passive income.</p>
             <a href="https://nextclip-app.lemonsqueezy.com/affiliates" class="cta-button">Start Earning Today →</a>
 
             <div class="hero-stats">
@@ -575,7 +575,7 @@
                     <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.15); border-radius: 12px; backdrop-filter: blur(10px);">
                         <p style="font-size: 15px; color: rgba(255,255,255,0.9); margin: 0; line-height: 1.6;">
                             ✨ <strong>Special Launch Promotion</strong><br>
-                            Join before March 2026 and earn 30% for every subscriber, every month, for as long as they remain a customer. No limits, no caps – just pure recurring income!
+                            Join until March 31, 2026 and earn 30% for every subscriber, every month, for as long as they remain a customer. No limits, no caps – just pure recurring income!
                         </p>
                     </div>
                 </div>
@@ -703,7 +703,7 @@
             <div class="faq-grid">
                 <div class="faq-item">
                     <h3 class="faq-question">How much can I earn?</h3>
-                    <p class="faq-answer">Your earnings depend on your tier and sales. Starting at 25% commission, you can earn $3-27 per sale depending on the plan. As you reach higher tiers (up to 40%), your income grows significantly. Plus, it's recurring - earn every month!</p>
+                    <p class="faq-answer">With our 30% lifetime commission, you can earn $3-24 per sale depending on the plan (Starter: $3, Professional: $6, Business: $24). Plus, it's recurring - earn every single month for as long as your referrals stay subscribed!</p>
                 </div>
 
                 <div class="faq-item">
@@ -712,8 +712,8 @@
                 </div>
 
                 <div class="faq-item">
-                    <h3 class="faq-question">How do tier upgrades work?</h3>
-                    <p class="faq-answer">Tiers are based on your total lifetime sales. Once you reach 11 sales, you automatically upgrade to Partner (30%). At 31 sales, you become an Ambassador (35%). At 76+ sales, you reach Legend status (40%). You never lose your tier!</p>
+                    <h3 class="faq-question">Is the commission really lifetime?</h3>
+                    <p class="faq-answer">Yes! You earn 30% recurring commission for every single month that your referral stays subscribed. There's no limit - if they stay for 5 years, you earn for 5 years. This is true passive income!</p>
                 </div>
 
                 <div class="faq-item">
@@ -787,7 +787,7 @@
             const monthlySignups = parseInt(signupsSlider.value);
 
             // Calculate cumulative recurring revenue for 12 months
-            // Taking into account tier progression based on total sales
+            // Fixed 30% commission rate for all affiliates
             let totalAnnualEarnings = 0;
             let cumulativeSales = 0;
 
@@ -795,7 +795,7 @@
                 // Add new sales for this month
                 cumulativeSales += monthlySignups;
 
-                // Get commission rate based on cumulative sales
+                // Get commission rate (fixed 30%)
                 const commissionRate = getTierCommission(cumulativeSales);
 
                 // Calculate revenue for this month (all active subscribers)
@@ -807,7 +807,7 @@
             // Total subscribers by end of year
             const yearEndSubscribers = monthlySignups * 12;
 
-            // Month 12 earnings (with highest tier commission)
+            // Month 12 earnings (with fixed 30% commission)
             const finalCommissionRate = getTierCommission(yearEndSubscribers);
             const month12Revenue = yearEndSubscribers * avgPlanPrice * finalCommissionRate;
 
