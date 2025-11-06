@@ -701,10 +701,18 @@
                         </div>
                     </div>
 
+                    <!-- Tier Timeline -->
+                    <div id="tierTimeline" style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 20px; display: none;">
+                        <div style="font-size: 14px; font-weight: 600; color: #2c3e50; margin-bottom: 10px;">📅 Your Tier Journey</div>
+                        <div id="tierMilestones" style="font-size: 13px; line-height: 2;">
+                            <!-- Dynamic tier upgrade timeline -->
+                        </div>
+                    </div>
+
                     <div class="result-label">Your First Year Total Earnings</div>
                     <div class="result-amount">$<span id="annualEarnings">4,678</span></div>
                     <div style="font-size: 14px; color: #7f8c8d; margin-top: 10px;">
-                        💡 This includes recurring revenue from all accumulated subscribers
+                        💡 This includes recurring revenue from all accumulated subscribers and tier upgrades
                     </div>
 
                     <div class="result-breakdown">
@@ -898,6 +906,8 @@
             // Taking into account tier progression based on total sales
             let totalAnnualEarnings = 0;
             let cumulativeSales = 0;
+            let previousTier = null;
+            const tierUpgrades = [];
 
             for (let month = 1; month <= 12; month++) {
                 // Add new sales for this month
@@ -905,6 +915,25 @@
 
                 // Get commission rate based on cumulative sales (tier progression)
                 const commissionRate = getTierCommission(cumulativeSales);
+                const currentTier = getTierInfo(cumulativeSales);
+
+                // Track tier upgrades
+                if (previousTier && currentTier.id > previousTier.id) {
+                    tierUpgrades.push({
+                        month: month,
+                        tier: currentTier,
+                        sales: cumulativeSales
+                    });
+                } else if (!previousTier && month === 1) {
+                    // Starting tier
+                    tierUpgrades.push({
+                        month: 1,
+                        tier: currentTier,
+                        sales: cumulativeSales,
+                        isStart: true
+                    });
+                }
+                previousTier = currentTier;
 
                 // Calculate revenue for this month (all active subscribers)
                 const activeSubscribers = monthlySignups * month;
@@ -922,11 +951,42 @@
             // Update tier display
             updateTierDisplay(yearEndSubscribers);
 
+            // Update tier timeline
+            updateTierTimeline(tierUpgrades);
+
             // Update UI
             signupsValue.textContent = monthlySignups;
             totalSubscribers.textContent = yearEndSubscribers;
             annualEarnings.textContent = totalAnnualEarnings.toLocaleString('en-US', {maximumFractionDigits: 0});
             month12Earnings.textContent = month12Revenue.toLocaleString('en-US', {maximumFractionDigits: 0});
+        }
+
+        // Update tier timeline display
+        function updateTierTimeline(tierUpgrades) {
+            const timelineEl = document.getElementById('tierTimeline');
+            const milestonesEl = document.getElementById('tierMilestones');
+
+            if (tierUpgrades.length === 0) {
+                timelineEl.style.display = 'none';
+                return;
+            }
+
+            timelineEl.style.display = 'block';
+            let html = '';
+
+            tierUpgrades.forEach((upgrade, index) => {
+                if (upgrade.isStart) {
+                    html += `<div style="color: #7f8c8d;">
+                        <strong>Month ${upgrade.month}:</strong> Start at ${upgrade.tier.emoji} ${upgrade.tier.name} (${upgrade.tier.commission}%)
+                    </div>`;
+                } else {
+                    html += `<div style="color: ${upgrade.tier.color}; font-weight: 600;">
+                        🎉 <strong>Month ${upgrade.month}:</strong> Upgrade to ${upgrade.tier.emoji} ${upgrade.tier.name} (${upgrade.tier.commission}%!) - ${upgrade.sales} total sales
+                    </div>`;
+                }
+            });
+
+            milestonesEl.innerHTML = html;
         }
 
         signupsSlider.addEventListener('input', calculateEarnings);
