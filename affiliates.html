@@ -687,6 +687,20 @@
                 </div>
 
                 <div class="calculator-result">
+                    <!-- Tier Display -->
+                    <div id="tierDisplay" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 16px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">Your Tier at Year End</div>
+                        <div style="font-size: 32px; font-weight: 700;">
+                            <span id="tierEmoji">💎</span> <span id="tierName">Partner</span>
+                        </div>
+                        <div style="font-size: 20px; font-weight: 600; margin-top: 5px;">
+                            <span id="tierCommission">30</span>% Commission
+                        </div>
+                        <div id="tierProgress" style="font-size: 13px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.3); opacity: 0.9;">
+                            <!-- Dynamic progress message -->
+                        </div>
+                    </div>
+
                     <div class="result-label">Your First Year Total Earnings</div>
                     <div class="result-amount">$<span id="annualEarnings">4,678</span></div>
                     <div style="font-size: 14px; color: #7f8c8d; margin-top: 10px;">
@@ -827,12 +841,54 @@
         // Constants
         const avgPlanPrice = 19.99; // Professional plan
 
+        // Tier configuration
+        const TIERS = [
+            { id: 1, name: 'Affiliate', emoji: '⭐', min: 0, max: 10, commission: 25, color: '#6c757d' },
+            { id: 2, name: 'Partner', emoji: '💎', min: 11, max: 30, commission: 30, color: '#667eea' },
+            { id: 3, name: 'Ambassador', emoji: '👑', min: 31, max: 75, commission: 35, color: '#f093fb' },
+            { id: 4, name: 'Legend', emoji: '🏆', min: 76, max: 999999, commission: 40, color: '#fa709a' }
+        ];
+
+        // Get tier info based on total sales
+        function getTierInfo(totalSales) {
+            for (const tier of TIERS) {
+                if (totalSales >= tier.min && totalSales <= tier.max) {
+                    return tier;
+                }
+            }
+            return TIERS[0];
+        }
+
         // Tier-based commission calculation
         function getTierCommission(totalSales) {
             if (totalSales >= 76) return 0.40;  // Legend
             if (totalSales >= 31) return 0.35;  // Ambassador
             if (totalSales >= 11) return 0.30;  // Partner
             return 0.25;  // Affiliate
+        }
+
+        // Update tier display
+        function updateTierDisplay(totalSales) {
+            const currentTier = getTierInfo(totalSales);
+            const nextTier = TIERS[currentTier.id]; // id is 1-indexed, array is 0-indexed, so id points to next tier
+
+            // Update tier info
+            document.getElementById('tierEmoji').textContent = currentTier.emoji;
+            document.getElementById('tierName').textContent = currentTier.name;
+            document.getElementById('tierCommission').textContent = currentTier.commission;
+
+            // Update background color
+            document.getElementById('tierDisplay').style.background = `linear-gradient(135deg, ${currentTier.color}, ${currentTier.color}dd)`;
+
+            // Update progress message
+            const progressEl = document.getElementById('tierProgress');
+            if (currentTier.id === 4) {
+                // Legend tier - maximum reached
+                progressEl.innerHTML = '🏆 Maximum tier reached! Keep up the great work!';
+            } else {
+                const salesNeeded = nextTier.min - totalSales;
+                progressEl.innerHTML = `📈 ${salesNeeded} more sale${salesNeeded > 1 ? 's' : ''} to reach ${nextTier.emoji} ${nextTier.name} (${nextTier.commission}%)`;
+            }
         }
 
         function calculateEarnings() {
@@ -862,6 +918,9 @@
             // Month 12 earnings (with highest tier commission)
             const finalCommissionRate = getTierCommission(yearEndSubscribers);
             const month12Revenue = yearEndSubscribers * avgPlanPrice * finalCommissionRate;
+
+            // Update tier display
+            updateTierDisplay(yearEndSubscribers);
 
             // Update UI
             signupsValue.textContent = monthlySignups;
