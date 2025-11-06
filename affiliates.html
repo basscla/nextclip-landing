@@ -686,18 +686,41 @@
                     <div class="calculator-value"><span id="signupsValue">10</span> new subscribers</div>
                 </div>
 
-                <!-- 12-Month Tier Visualization Bar -->
+                <!-- 12-Month Tier Visualization Timeline -->
                 <div style="margin: 30px 0; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <div style="font-size: 14px; font-weight: 600; color: #2c3e50; margin-bottom: 12px; text-align: center;">
+                    <div style="font-size: 14px; font-weight: 600; color: #2c3e50; margin-bottom: 20px; text-align: center;">
                         📊 Your Tier Progression Over 12 Months
                     </div>
-                    <div id="monthTimeline" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px;">
-                        <!-- 12 month bars will be populated by JavaScript -->
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: #7f8c8d;">
-                        <span>Month 1</span>
-                        <span>Month 6</span>
-                        <span>Month 12</span>
+
+                    <!-- Timeline Container -->
+                    <div style="position: relative; margin: 40px 0 20px 0;">
+                        <!-- Tier Upgrade Arrows (positioned above timeline) -->
+                        <div id="tierArrows" style="position: absolute; top: -35px; left: 0; right: 0; height: 30px;">
+                            <!-- Arrows will be populated by JavaScript -->
+                        </div>
+
+                        <!-- 12-Month Timeline Bar -->
+                        <div style="position: relative; height: 40px; background: linear-gradient(to right, #e9ecef 0%, #dee2e6 100%); border-radius: 8px; overflow: hidden;">
+                            <div id="monthTimeline" style="display: flex; height: 100%;">
+                                <!-- Month segments will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Month Labels -->
+                        <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: #7f8c8d;">
+                            <span>Month 1</span>
+                            <span>Month 2</span>
+                            <span>Month 3</span>
+                            <span>Month 4</span>
+                            <span>Month 5</span>
+                            <span>Month 6</span>
+                            <span>Month 7</span>
+                            <span>Month 8</span>
+                            <span>Month 9</span>
+                            <span>Month 10</span>
+                            <span>Month 11</span>
+                            <span>Month 12</span>
+                        </div>
                     </div>
                 </div>
 
@@ -987,33 +1010,67 @@
             month12Earnings.textContent = month12Revenue.toLocaleString('en-US', {maximumFractionDigits: 0});
         }
 
-        // Update 12-month tier visualization bar
+        // Update 12-month tier visualization timeline with arrows
         function updateMonthTimeline(monthlyTiers) {
             const timelineEl = document.getElementById('monthTimeline');
-            let html = '';
+            const arrowsEl = document.getElementById('tierArrows');
 
-            monthlyTiers.forEach((monthData) => {
+            // Create 12 month segments
+            let timelineHtml = '';
+            monthlyTiers.forEach((monthData, index) => {
                 const tier = monthData.tier;
-                html += `
+                timelineHtml += `
                     <div style="
+                        flex: 1;
                         background: ${tier.color};
-                        height: 60px;
-                        border-radius: 6px;
+                        height: 100%;
                         display: flex;
-                        flex-direction: column;
                         align-items: center;
                         justify-content: center;
+                        border-right: ${index < 11 ? '1px solid rgba(255,255,255,0.3)' : 'none'};
                         position: relative;
                         transition: all 0.3s ease;
-                        cursor: pointer;
                     " title="Month ${monthData.month}: ${tier.name} (${tier.commission}%) - ${monthData.sales} sales">
-                        <div style="font-size: 16px;">${tier.emoji}</div>
-                        <div style="font-size: 10px; color: white; font-weight: 600; margin-top: 2px;">${tier.commission}%</div>
+                        <span style="font-size: 14px;">${tier.emoji}</span>
                     </div>
                 `;
             });
+            timelineEl.innerHTML = timelineHtml;
 
-            timelineEl.innerHTML = html;
+            // Create tier upgrade arrows
+            let arrowsHtml = '';
+            let previousTier = null;
+
+            monthlyTiers.forEach((monthData, index) => {
+                const currentTier = monthData.tier;
+
+                // Check if tier upgraded at this month
+                if (previousTier && currentTier.id > previousTier.id) {
+                    // Calculate position (center of the month segment)
+                    const position = ((index / 12) * 100) + ((1 / 12) * 100 / 2);
+
+                    arrowsHtml += `
+                        <div style="
+                            position: absolute;
+                            left: ${position}%;
+                            transform: translateX(-50%);
+                            text-align: center;
+                        ">
+                            <div style="font-size: 20px; line-height: 1;">↓</div>
+                            <div style="
+                                font-size: 9px;
+                                font-weight: 700;
+                                color: ${currentTier.color};
+                                white-space: nowrap;
+                                margin-top: -2px;
+                            ">${currentTier.emoji} ${currentTier.name}</div>
+                        </div>
+                    `;
+                }
+                previousTier = currentTier;
+            });
+
+            arrowsEl.innerHTML = arrowsHtml;
         }
 
         // Update tier timeline display
