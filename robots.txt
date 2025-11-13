@@ -1,0 +1,14 @@
+# NextClip - robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://nextclip.io/sitemap.xml
+
+# Crawl-delay (optional, for slow bots)
+# Crawl-delay: 10
+
+# Disallow admin areas (if any)
+# Disallow: /admin/
+# Disallow: /private/
