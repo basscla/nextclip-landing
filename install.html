@@ -96,13 +96,12 @@
 <body>
     <div class="container">
         <h1>🚀 Installing NextClip...</h1>
-        <p id="status">Setting up your affiliate tracking</p>
+        <p id="status">Preparing installation</p>
         <div class="loading"></div>
 
         <div class="info">
             <p><strong>What's happening?</strong></p>
             <p>We're redirecting you to the Chrome Web Store to install NextClip.</p>
-            <p id="affiliate-info"></p>
         </div>
 
         <a href="#" id="manual-link" class="manual-link" style="display: none;">
@@ -134,12 +133,6 @@
                     localStorage.setItem('nextclip_affiliate_code', JSON.stringify(affiliateData));
 
                     console.log('✅ Affiliate code saved:', refCode);
-
-                    // Update UI
-                    const affiliateInfo = document.getElementById('affiliate-info');
-                    if (affiliateInfo) {
-                        affiliateInfo.innerHTML = `<strong>✅ Affiliate code: ${refCode.toUpperCase()}</strong><br>Your referral will be tracked for 30 days!`;
-                    }
                 } catch (error) {
                     console.error('Failed to save affiliate code:', error);
                 }
