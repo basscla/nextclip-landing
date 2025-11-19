@@ -846,32 +846,182 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            /* Global Mobile Fixes */
+            * {
+                max-width: 100%;
+            }
+
+            body {
+                overflow-x: hidden;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            /* All Images */
+            img {
+                max-width: 100% !important;
+                height: auto !important;
+                object-fit: contain;
+            }
+
+            /* Navigation */
             .nav-links {
                 display: none;
             }
 
+            .logo {
+                font-size: 22px;
+            }
+
+            /* Hero Section */
+            .hero {
+                padding: 100px 0 60px;
+            }
+
             .hero-content {
                 grid-template-columns: 1fr;
+                gap: 30px;
             }
 
             .hero-text h1 {
-                font-size: 36px;
+                font-size: 28px;
+                line-height: 1.3;
             }
 
+            .hero-text p {
+                font-size: 16px;
+            }
+
+            .hero-image {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .hero-image img {
+                border-radius: 12px;
+            }
+
+            /* CTA Buttons */
+            .cta-button {
+                width: 100%;
+                padding: 14px 24px;
+                font-size: 16px;
+                text-align: center;
+            }
+
+            .cta-secondary {
+                width: 100%;
+                padding: 14px 24px;
+                font-size: 16px;
+                text-align: center;
+            }
+
+            /* Stats */
+            .stats-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .stat-item {
+                text-align: center;
+                padding: 15px;
+            }
+
+            /* Company Stats */
+            .company-stats {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 40px 0;
+            }
+
+            .stat-box {
+                padding: 20px;
+            }
+
+            /* Features */
             .features-grid {
                 grid-template-columns: 1fr;
+                gap: 30px;
             }
 
+            .feature-card {
+                padding: 25px;
+            }
+
+            .feature-card h3 {
+                font-size: 20px;
+            }
+
+            .feature-card p {
+                font-size: 15px;
+            }
+
+            /* How it Works */
             .steps-timeline {
                 grid-template-columns: 1fr;
+                gap: 30px;
             }
 
-            .company-stats {
-                grid-template-columns: repeat(2, 1fr);
+            .step-card {
+                padding: 25px;
             }
 
+            /* Pricing */
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .pricing-card {
+                padding: 30px 20px;
+            }
+
+            /* Testimonials */
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            /* Footer */
             .footer-content {
                 grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+
+            .footer-column {
+                text-align: center;
+            }
+
+            /* Section Padding */
+            .features-section,
+            .how-section,
+            .pricing-section,
+            .testimonials-section,
+            .cta-section {
+                padding: 60px 0;
+            }
+
+            /* Section Titles */
+            .section-title {
+                font-size: 28px;
+                text-align: center;
+            }
+
+            .section-subtitle {
+                font-size: 16px;
+                text-align: center;
+            }
+
+            /* Fix any overflow */
+            .hero-content,
+            .features-grid,
+            .steps-timeline,
+            .pricing-grid,
+            .testimonials-grid {
+                overflow-x: hidden;
             }
         }
     </style>
@@ -977,12 +1127,7 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "NextClip",
-      "url": "https://nextclip.io",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://nextclip.io/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
+      "url": "https://nextclip.io"
     }
     </script>
 </head>
@@ -997,6 +1142,7 @@
                     <li><a href="#how-it-works">How It Works</a></li>
                     <li><a href="#pricing">Pricing</a></li>
                     <li><a href="#resources">Resources</a></li>
+                    <li><a href="affiliates.html">Affiliates</a></li>
                     <li><a href="https://chrome.google.com/webstore/detail/nextclip/goepeedjlpghnmfokajgegholocmenef" class="nav-cta" target="_blank" rel="noopener">Get Started</a></li>
                 </ul>
             </nav>
@@ -2565,5 +2711,8 @@
             });
         });
     </script>
+
+    <!-- Affiliate Tracking System -->
+    <script src="affiliate-tracker-web.js"></script>
 </body>
 </html>
