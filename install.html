@@ -144,7 +144,7 @@
             const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 
             if (!isChrome) {
-                // Not Chrome - show warning
+                // Not Chrome - offer to open in Chrome
                 const status = document.getElementById('status');
                 if (status) {
                     status.textContent = '⚠️ NextClip requires Google Chrome';
@@ -158,8 +158,10 @@
 
                 const manualLink = document.getElementById('manual-link');
                 if (manualLink) {
-                    manualLink.textContent = 'Download Chrome First';
-                    manualLink.href = 'https://www.google.com/chrome/';
+                    // Use googlechrome:// protocol to open in Chrome
+                    const currentUrl = window.location.href;
+                    manualLink.textContent = 'Open in Chrome →';
+                    manualLink.href = 'googlechrome://' + currentUrl.replace(/^https?:\/\//, '');
                     manualLink.style.display = 'inline-block';
                 }
 
