@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Dashboard - NextClip</title>
+    <meta name="description" content="View your NextClip affiliate stats, earnings, and performance metrics.">
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            color: #e74c3c;
+            text-decoration: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Main Content */
+        main {
+            padding-top: 100px;
+            padding-bottom: 60px;
+        }
+
+        /* Loading State */
+        #loadingState {
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Login State */
+        #loginState {
+            text-align: center;
+            padding: 100px 20px;
+            display: none;
+        }
+
+        .login-card {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .login-card h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .login-card p {
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .google-login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            color: #2c3e50;
+            padding: 12px 24px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .google-login-btn:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .google-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Dashboard */
+        #dashboardState {
+            display: none;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .stat-growth {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .stat-growth.positive {
+            color: #27ae60;
+        }
+
+        .stat-growth.negative {
+            color: #e74c3c;
+        }
+
+        /* Affiliate Link Section */
+        .affiliate-link-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+
+        .affiliate-link-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .link-input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .link-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .copy-btn, .share-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        .share-btn {
+            background: #1DA1F2;
+            color: white;
+        }
+
+        .share-btn:hover {
+            background: #1a8cd8;
+        }
+
+        /* Tier Progress */
+        .tier-progress-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .tier-progress-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .progress-bar-container {
+            background: #f0f0f0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .tier-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .tier-item {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .tier-item.active {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .tier-emoji {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .tier-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .tier-commission {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        /* Error State */
+        .error-message {
+            background: #ffe5e5;
+            color: #c0392b;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        /* Not Affiliate State */
+        #notAffiliateState {
+            display: none;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .not-affiliate-card {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .not-affiliate-card h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .not-affiliate-card p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .join-program-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .join-program-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .link-input-group {
+                flex-direction: column;
+            }
+
+            .tier-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">🚀 NextClip</a>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <img id="userAvatar" class="user-avatar" alt="User Avatar">
+                <span id="userName"></span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Loading State -->
+        <div id="loadingState">
+            <div class="spinner"></div>
+            <p>Loading your affiliate dashboard...</p>
+        </div>
+
+        <!-- Login State -->
+        <div id="loginState">
+            <div class="login-card">
+                <h1>🔐 Affiliate Dashboard</h1>
+                <p>Sign in with Google to view your affiliate stats and earnings</p>
+                <button id="googleLoginBtn" class="google-login-btn">
+                    <svg class="google-icon" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+            </div>
+        </div>
+
+        <!-- Not Affiliate State -->
+        <div id="notAffiliateState">
+            <div class="not-affiliate-card">
+                <h1>🚀 You're not an affiliate yet!</h1>
+                <p>Join our affiliate program to start earning 25-40% recurring commission on every sale.</p>
+                <button id="autoJoinBtn" class="join-program-btn" onclick="autoJoinAffiliateProgram()">
+                    Get My Affiliate Link Now →
+                </button>
+                <p style="font-size: 14px; color: #7f8c8d; margin-top: 20px;">
+                    ✨ Instant activation - No approval needed!
+                </p>
+            </div>
+        </div>
+
+        <!-- Dashboard State -->
+        <div id="dashboardState">
+            <div class="dashboard-header">
+                <h1>📊 Your Affiliate Dashboard</h1>
+                <div class="tier-badge" id="tierBadge">⭐ Affiliate - 25%</div>
+            </div>
+
+            <div id="errorContainer"></div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Monthly Earnings</div>
+                    <div class="stat-value" id="monthlyEarnings">$0.00</div>
+                    <div class="stat-growth positive" id="monthlyGrowth">--</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Clicks</div>
+                    <div class="stat-value" id="totalClicks">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Sales</div>
+                    <div class="stat-value" id="totalSales">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Conversion Rate</div>
+                    <div class="stat-value" id="conversionRate">0%</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Earned</div>
+                    <div class="stat-value" id="totalEarned">$0.00</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Pending Payout</div>
+                    <div class="stat-value" id="pendingPayout">$0.00</div>
+                </div>
+            </div>
+
+            <!-- Affiliate Link -->
+            <div class="affiliate-link-section">
+                <h2>🔗 Your Affiliate Link</h2>
+                <div class="link-input-group">
+                    <input type="text" id="affiliateLink" class="link-input" value="Loading..." readonly>
+                    <button id="copyLinkBtn" class="copy-btn">Copy</button>
+                    <button id="shareLinkBtn" class="share-btn">Share on Twitter</button>
+                </div>
+            </div>
+
+            <!-- Tier Progress -->
+            <div class="tier-progress-section">
+                <h2>🎯 Your Progress</h2>
+                <p id="progressText">Keep going! You need X more sales to reach the next tier.</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%">0%</div>
+                </div>
+
+                <div class="tier-list">
+                    <div class="tier-item">
+                        <div class="tier-emoji">⭐</div>
+                        <div class="tier-name">Affiliate</div>
+                        <div class="tier-commission">25%</div>
+                        <div style="font-size: 12px; color: #7f8c8d; margin-top: 4px;">0-10 sales</div>
+                    </div>
+                    <div class="tier-item">
+                        <div class="tier-emoji">💎</div>
+                        <div class="tier-name">Partner</div>
+                        <div class="tier-commission">30%</div>
+                        <div style="font-size: 12px; color: #7f8c8d; margin-top: 4px;">11-30 sales</div>
+                    </div>
+                    <div class="tier-item">
+                        <div class="tier-emoji">👑</div>
+                        <div class="tier-name">Ambassador</div>
+                        <div class="tier-commission">35%</div>
+                        <div style="font-size: 12px; color: #7f8c8d; margin-top: 4px;">31-75 sales</div>
+                    </div>
+                    <div class="tier-item">
+                        <div class="tier-emoji">🏆</div>
+                        <div class="tier-name">Legend</div>
+                        <div class="tier-commission">40%</div>
+                        <div style="font-size: 12px; color: #7f8c8d; margin-top: 4px;">76+ sales</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://mdrifmkewemdfqzfusry.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kcmlmbWtld2VtZGZxemZ1c3J5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2MjQzMDgsImV4cCI6MjA3NjIwMDMwOH0.30YrEDFhL5Ytqyqov586f_XvEuNdeuGt8eeIfa1UkI0';
+
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Tier configuration
+        const TIERS = [
+            { id: 1, name: 'Affiliate', emoji: '⭐', min: 0, max: 10, commission: 25, color: '#6c757d' },
+            { id: 2, name: 'Partner', emoji: '💎', min: 11, max: 30, commission: 30, color: '#667eea' },
+            { id: 3, name: 'Ambassador', emoji: '👑', min: 31, max: 75, commission: 35, color: '#f093fb' },
+            { id: 4, name: 'Legend', emoji: '🏆', min: 76, max: 999999, commission: 40, color: '#fa709a' }
+        ];
+
+        function getTierBySales(salesCount) {
+            for (const tier of TIERS) {
+                if (salesCount >= tier.min && salesCount <= tier.max) {
+                    return tier;
+                }
+            }
+            return TIERS[0];
+        }
+
+        // State management
+        let currentUser = null;
+
+        // Show/hide states
+        function showLoading() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('loginState').style.display = 'none';
+            document.getElementById('dashboardState').style.display = 'none';
+            document.getElementById('notAffiliateState').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('loginState').style.display = 'block';
+            document.getElementById('dashboardState').style.display = 'none';
+            document.getElementById('notAffiliateState').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('loginState').style.display = 'none';
+            document.getElementById('dashboardState').style.display = 'block';
+            document.getElementById('notAffiliateState').style.display = 'none';
+        }
+
+        function showNotAffiliate() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('loginState').style.display = 'none';
+            document.getElementById('dashboardState').style.display = 'none';
+            document.getElementById('notAffiliateState').style.display = 'block';
+        }
+
+        function showError(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `<div class="error-message">⚠️ ${message}</div>`;
+        }
+
+        // Google OAuth login
+        async function signInWithGoogle() {
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.href
+                    }
+                });
+
+                if (error) throw error;
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Failed to sign in. Please try again.');
+            }
+        }
+
+        // Logout
+        async function signOut() {
+            try {
+                const { error } = await supabaseClient.auth.signOut();
+                if (error) throw error;
+                window.location.reload();
+            } catch (error) {
+                console.error('Logout error:', error);
+                showError('Failed to sign out. Please try again.');
+            }
+        }
+
+        // Auto join affiliate program
+        async function autoJoinAffiliateProgram() {
+            if (!currentUser) {
+                showError('Please log in first');
+                return;
+            }
+
+            const btn = document.getElementById('autoJoinBtn');
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ Creating your affiliate account...';
+            btn.disabled = true;
+
+            try {
+                // Call Supabase function to auto-register
+                const { data, error } = await supabaseClient.rpc('auto_register_affiliate', {
+                    user_email_param: currentUser.email
+                });
+
+                if (error) throw error;
+
+                if (data.success) {
+                    // Show success message
+                    showError(`🎉 Success! Your affiliate code is ${data.affiliate_code}`);
+
+                    // Wait 1 second then reload dashboard
+                    setTimeout(async () => {
+                        const stats = await fetchAffiliateStats();
+                        updateDashboard(stats);
+                        showDashboard();
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Failed to register affiliate');
+                }
+
+            } catch (error) {
+                console.error('Auto join error:', error);
+                showError(`Failed to create affiliate account: ${error.message}`);
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // Fetch affiliate stats
+        async function fetchAffiliateStats() {
+            try {
+                const { data, error } = await supabaseClient.functions.invoke('get-affiliate-stats', {
+                    body: { action: 'get_stats' }
+                });
+
+                if (error) throw error;
+
+                if (!data || !data.success) {
+                    throw new Error(data?.error || 'Failed to fetch affiliate stats');
+                }
+
+                return data.data;
+            } catch (error) {
+                console.error('Error fetching affiliate stats:', error);
+                throw error;
+            }
+        }
+
+        // Update dashboard UI
+        function updateDashboard(stats) {
+            const tier = getTierBySales(stats.totalSales);
+            const nextTier = TIERS.find(t => t.min > stats.totalSales);
+
+            // Update tier badge
+            document.getElementById('tierBadge').textContent = `${tier.emoji} ${tier.name} - ${tier.commission}%`;
+
+            // Update stats
+            document.getElementById('monthlyEarnings').textContent = `$${stats.monthlyEarnings.toFixed(2)}`;
+            document.getElementById('totalClicks').textContent = stats.totalClicks.toLocaleString();
+            document.getElementById('totalSales').textContent = stats.totalSales.toLocaleString();
+            document.getElementById('conversionRate').textContent = `${stats.conversionRate.toFixed(2)}%`;
+            document.getElementById('totalEarned').textContent = `$${stats.totalEarned.toFixed(2)}`;
+            document.getElementById('pendingPayout').textContent = `$${stats.pendingPayout.toFixed(2)}`;
+
+            // Update growth
+            if (stats.lastMonthEarnings > 0) {
+                const growth = ((stats.monthlyEarnings - stats.lastMonthEarnings) / stats.lastMonthEarnings * 100);
+                const growthEl = document.getElementById('monthlyGrowth');
+                growthEl.textContent = `${growth > 0 ? '+' : ''}${growth.toFixed(1)}% vs last month`;
+                growthEl.className = `stat-growth ${growth >= 0 ? 'positive' : 'negative'}`;
+            } else if (stats.monthlyEarnings > 0) {
+                document.getElementById('monthlyGrowth').textContent = '+100% vs last month';
+                document.getElementById('monthlyGrowth').className = 'stat-growth positive';
+            }
+
+            // Update affiliate link
+            document.getElementById('affiliateLink').value = stats.affiliateLink;
+
+            // Update progress
+            if (nextTier) {
+                const salesNeeded = nextTier.min - stats.totalSales;
+                const progress = ((stats.totalSales - tier.min) / (tier.max - tier.min)) * 100;
+
+                document.getElementById('progressText').textContent =
+                    `Great work! You need ${salesNeeded} more sale${salesNeeded > 1 ? 's' : ''} to reach ${nextTier.emoji} ${nextTier.name} (${nextTier.commission}%)`;
+                document.getElementById('progressBar').style.width = `${Math.min(100, progress)}%`;
+                document.getElementById('progressBar').textContent = `${Math.round(progress)}%`;
+            } else {
+                document.getElementById('progressText').textContent =
+                    `🎉 Congratulations! You've reached the highest tier: ${tier.emoji} ${tier.name}!`;
+                document.getElementById('progressBar').style.width = '100%';
+                document.getElementById('progressBar').textContent = '100%';
+            }
+
+            // Highlight current tier
+            const tierItems = document.querySelectorAll('.tier-item');
+            tierItems.forEach((item, index) => {
+                if (TIERS[index].id === tier.id) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Copy link
+        function copyAffiliateLink() {
+            const linkInput = document.getElementById('affiliateLink');
+            linkInput.select();
+            document.execCommand('copy');
+
+            const btn = document.getElementById('copyLinkBtn');
+            btn.textContent = 'Copied!';
+            setTimeout(() => {
+                btn.textContent = 'Copy';
+            }, 2000);
+        }
+
+        // Share on Twitter
+        function shareOnTwitter() {
+            const link = document.getElementById('affiliateLink').value;
+            const text = encodeURIComponent('Check out NextClip - Track YouTube video performance in real-time! 🚀📊');
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(link)}`, '_blank', 'width=600,height=400');
+        }
+
+        // Initialize
+        async function init() {
+            showLoading();
+
+            // Check for existing session
+            const { data: { session } } = await supabaseClient.auth.getSession();
+
+            if (!session) {
+                showLogin();
+                return;
+            }
+
+            currentUser = session.user;
+
+            // Update user info in header
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('userName').textContent = currentUser.user_metadata.name || currentUser.email;
+            if (currentUser.user_metadata.avatar_url) {
+                document.getElementById('userAvatar').src = currentUser.user_metadata.avatar_url;
+            }
+
+            // Fetch affiliate stats
+            try {
+                const stats = await fetchAffiliateStats();
+
+                if (stats.isAffiliate) {
+                    updateDashboard(stats);
+                    showDashboard();
+                } else {
+                    showNotAffiliate();
+                }
+            } catch (error) {
+                console.error('Error loading affiliate data:', error);
+                showError('Failed to load affiliate data. Please refresh the page.');
+                showDashboard(); // Show empty dashboard
+            }
+        }
+
+        // Event listeners
+        document.getElementById('googleLoginBtn').addEventListener('click', signInWithGoogle);
+        document.getElementById('logoutBtn').addEventListener('click', signOut);
+        document.getElementById('copyLinkBtn').addEventListener('click', copyAffiliateLink);
+        document.getElementById('shareLinkBtn').addEventListener('click', shareOnTwitter);
+
+        // Listen for auth changes
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN') {
+                init();
+            } else if (event === 'SIGNED_OUT') {
+                showLogin();
+            }
+        });
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

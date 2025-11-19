@@ -49,6 +49,28 @@
             text-decoration: none;
         }
 
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-dashboard {
+            background: transparent;
+            color: #667eea;
+            padding: 10px 24px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-dashboard:hover {
+            background: #667eea;
+            color: white;
+        }
+
         .nav-cta {
             background: #e74c3c;
             color: white;
@@ -522,6 +544,16 @@
             .result-breakdown {
                 grid-template-columns: 1fr;
             }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-dashboard, .nav-cta {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -530,7 +562,10 @@
     <header>
         <nav class="container">
             <a href="index.html" class="logo">NextClip</a>
-            <a href="https://nextclip-app.lemonsqueezy.com/affiliates" class="nav-cta">Join Now</a>
+            <div class="nav-links">
+                <a href="affiliate-dashboard.html" class="nav-dashboard">View Dashboard</a>
+                <a href="affiliate-dashboard.html" class="nav-cta">Join Now</a>
+            </div>
         </nav>
     </header>
 
@@ -539,7 +574,7 @@
         <div class="container">
             <h1>🚀 Earn 25-40% Lifetime Commission<br>with NextClip Affiliate Program</h1>
             <p>Automatic tier upgrades as you grow! Start at 25% and earn up to 40% recurring commission. The more you sell, the more you earn - completely automatic!</p>
-            <a href="https://nextclip-app.lemonsqueezy.com/affiliates" class="cta-button">Start Earning Today →</a>
+            <a href="affiliate-dashboard.html" class="cta-button">Start Earning Today →</a>
 
             <div class="hero-stats">
                 <div class="stat">
@@ -842,7 +877,7 @@
 
                 <div class="faq-item">
                     <h3 class="faq-question">Where can I see my stats?</h3>
-                    <p class="faq-answer">You can track your clicks, conversions, and earnings in real-time through your affiliate dashboard at app.lemonsqueezy.com/affiliates or in the NextClip extension Premium tab.</p>
+                    <p class="faq-answer">You can track your clicks, conversions, and earnings in real-time through our <a href="affiliate-dashboard.html" style="color: #667eea; font-weight: 600;">Affiliate Dashboard</a> (just login with your Google account), or in the NextClip extension Pricing tab.</p>
                 </div>
 
                 <div class="faq-item">
@@ -858,7 +893,7 @@
         <div class="container">
             <h2>Ready to Start Earning?</h2>
             <p>Join NextClip's affiliate program today and start building your passive income stream</p>
-            <a href="https://nextclip-app.lemonsqueezy.com/affiliates" class="cta-button">Join the Affiliate Program →</a>
+            <a href="affiliate-dashboard.html" class="cta-button">Join the Affiliate Program →</a>
         </div>
     </section>
 
