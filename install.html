@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installing NextClip...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        p {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .manual-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .manual-link:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Installing NextClip...</h1>
+        <p id="status">Setting up your affiliate tracking</p>
+        <div class="loading"></div>
+
+        <div class="info">
+            <p><strong>What's happening?</strong></p>
+            <p>We're redirecting you to the Chrome Web Store to install NextClip.</p>
+            <p id="affiliate-info"></p>
+        </div>
+
+        <a href="#" id="manual-link" class="manual-link" style="display: none;">
+            Continue to Chrome Web Store Manually →
+        </a>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // Chrome Web Store URL
+            const CHROME_STORE_URL = 'https://chrome.google.com/webstore/detail/nextclip/goepeedjlpghnmfokajgegholocmenef';
+
+            // Extract ref parameter from URL
+            const params = new URLSearchParams(window.location.search);
+            const refCode = params.get('ref');
+
+            // Save affiliate code to localStorage
+            if (refCode) {
+                try {
+                    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+                    const affiliateData = {
+                        code: refCode.toUpperCase(),
+                        setAt: new Date().toISOString(),
+                        expiresAt: expiresAt.toISOString()
+                    };
+
+                    localStorage.setItem('nextclip_affiliate_code', JSON.stringify(affiliateData));
+
+                    console.log('✅ Affiliate code saved:', refCode);
+
+                    // Update UI
+                    const affiliateInfo = document.getElementById('affiliate-info');
+                    if (affiliateInfo) {
+                        affiliateInfo.innerHTML = `<strong>✅ Affiliate code: ${refCode.toUpperCase()}</strong><br>Your referral will be tracked for 30 days!`;
+                    }
+                } catch (error) {
+                    console.error('Failed to save affiliate code:', error);
+                }
+            } else {
+                console.log('No affiliate code in URL');
+            }
+
+            // Check if Chrome browser
+            const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+
+            if (!isChrome) {
+                // Not Chrome - show warning
+                const status = document.getElementById('status');
+                if (status) {
+                    status.textContent = '⚠️ NextClip requires Google Chrome';
+                    status.style.color = '#ffeb3b';
+                }
+
+                const loading = document.querySelector('.loading');
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+
+                const manualLink = document.getElementById('manual-link');
+                if (manualLink) {
+                    manualLink.textContent = 'Download Chrome First';
+                    manualLink.href = 'https://www.google.com/chrome/';
+                    manualLink.style.display = 'inline-block';
+                }
+
+                return;
+            }
+
+            // Update status
+            const status = document.getElementById('status');
+            if (status) {
+                status.textContent = 'Redirecting to Chrome Web Store...';
+            }
+
+            // Show manual link
+            const manualLink = document.getElementById('manual-link');
+            if (manualLink) {
+                manualLink.href = CHROME_STORE_URL;
+                manualLink.style.display = 'inline-block';
+            }
+
+            // Auto-redirect after 2 seconds
+            setTimeout(() => {
+                window.location.href = CHROME_STORE_URL;
+            }, 2000);
+
+        })();
+    </script>
+</body>
+</html>
