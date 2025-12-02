@@ -1,7 +1,14 @@
-Icon
-Icon?
+# macOS system files
 .DS_Store
+.AppleDouble
+.LSOverride
 
-# macOS Icon files
+# Icon files (macOS custom folder icons)
 Icon
 Icon?
+Icon
+._*
+
+# Thumbnails
+._*
+Thumbs.db
