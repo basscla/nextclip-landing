@@ -603,11 +603,11 @@
             <p class="section-subtitle">Your commission grows automatically as you hit milestones. No manual requests needed!</p>
 
             <div class="tiers-grid">
-                <!-- Tier 1: Affiliate -->
-                <div class="tier-card" style="--tier-color: #6c757d;">
-                    <div class="tier-emoji">⭐</div>
-                    <h3 class="tier-name">Affiliate</h3>
-                    <p class="tier-range">0-10 sales</p>
+                <!-- Tier 1: BRONZE -->
+                <div class="tier-card" style="--tier-color: #cd7f32;">
+                    <div class="tier-emoji">🥉</div>
+                    <h3 class="tier-name">BRONZE</h3>
+                    <p class="tier-range">0-4 sales</p>
                     <div class="tier-commission">25<span>%</span></div>
                     <ul class="tier-perks">
                         <li>Basic marketing materials</li>
@@ -617,28 +617,28 @@
                     </ul>
                 </div>
 
-                <!-- Tier 2: Partner -->
-                <div class="tier-card" style="--tier-color: #667eea;">
-                    <div class="tier-emoji">💎</div>
-                    <h3 class="tier-name">Partner</h3>
-                    <p class="tier-range">11-30 sales</p>
+                <!-- Tier 2: SILVER -->
+                <div class="tier-card" style="--tier-color: #c0c0c0;">
+                    <div class="tier-emoji">🥈</div>
+                    <h3 class="tier-name">SILVER</h3>
+                    <p class="tier-range">5-14 sales</p>
                     <div class="tier-commission">30<span>%</span></div>
                     <ul class="tier-perks">
-                        <li>All Affiliate perks</li>
+                        <li>All BRONZE perks</li>
                         <li>Premium banner images</li>
                         <li>Email templates</li>
-                        <li>Partner badge</li>
+                        <li>SILVER badge</li>
                     </ul>
                 </div>
 
-                <!-- Tier 3: Ambassador -->
-                <div class="tier-card" style="--tier-color: #f093fb;">
-                    <div class="tier-emoji">👑</div>
-                    <h3 class="tier-name">Ambassador</h3>
-                    <p class="tier-range">31-75 sales</p>
+                <!-- Tier 3: GOLD -->
+                <div class="tier-card" style="--tier-color: #ffd700;">
+                    <div class="tier-emoji">🥇</div>
+                    <h3 class="tier-name">GOLD</h3>
+                    <p class="tier-range">15-29 sales</p>
                     <div class="tier-commission">35<span>%</span></div>
                     <ul class="tier-perks">
-                        <li>All Partner perks</li>
+                        <li>All SILVER perks</li>
                         <li>Professional plan FREE ($20/mo)</li>
                         <li>Early feature access</li>
                         <li>Dedicated Discord channel</li>
@@ -646,14 +646,14 @@
                     </ul>
                 </div>
 
-                <!-- Tier 4: Legend -->
-                <div class="tier-card" style="--tier-color: #fa709a;">
-                    <div class="tier-emoji">🏆</div>
-                    <h3 class="tier-name">Legend</h3>
-                    <p class="tier-range">76+ sales</p>
+                <!-- Tier 4: PLATINUM -->
+                <div class="tier-card" style="--tier-color: #e5e4e2;">
+                    <div class="tier-emoji">💎</div>
+                    <h3 class="tier-name">PLATINUM</h3>
+                    <p class="tier-range">30+ sales</p>
                     <div class="tier-commission">40<span>%</span></div>
                     <ul class="tier-perks">
-                        <li>All Ambassador perks</li>
+                        <li>All GOLD perks</li>
                         <li>Professional plan FOREVER</li>
                         <li>$250 monthly bonus (100+ sales)</li>
                         <li>Personal account manager</li>
@@ -767,7 +767,7 @@
                     <div id="tierDisplay" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 16px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
                         <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">Your Tier at Year End</div>
                         <div style="font-size: 32px; font-weight: 700;">
-                            <span id="tierEmoji">💎</span> <span id="tierName">Partner</span>
+                            <span id="tierEmoji">🥈</span> <span id="tierName">SILVER</span>
                         </div>
                         <div style="font-size: 20px; font-weight: 600; margin-top: 5px;">
                             <span id="tierCommission">30</span>% Commission
@@ -855,7 +855,7 @@
 
                 <div class="faq-item">
                     <h3 class="faq-question">How do tier upgrades work?</h3>
-                    <p class="faq-answer">Completely automatic! Our system checks your sales daily. When you hit 11 sales, you jump to 30%. At 31 sales, you reach 35%. At 76+ sales, you hit the maximum 40%. You'll get an email notification when you're upgraded, and the new rate applies to ALL future sales automatically.</p>
+                    <p class="faq-answer">Completely automatic! Our system checks your sales daily. When you hit 5 sales, you jump to SILVER (30%). At 15 sales, you reach GOLD (35%). At 30+ sales, you hit PLATINUM (40%). You'll get an email notification when you're upgraded, and the new rate applies to ALL future sales automatically.</p>
                 </div>
 
                 <div class="faq-item">
@@ -928,12 +928,12 @@
         // Constants
         const avgPlanPrice = 19.99; // Professional plan
 
-        // Tier configuration
+        // Tier configuration (matches Refgrow settings)
         const TIERS = [
-            { id: 1, name: 'Affiliate', emoji: '⭐', min: 0, max: 10, commission: 25, color: '#6c757d' },
-            { id: 2, name: 'Partner', emoji: '💎', min: 11, max: 30, commission: 30, color: '#667eea' },
-            { id: 3, name: 'Ambassador', emoji: '👑', min: 31, max: 75, commission: 35, color: '#f093fb' },
-            { id: 4, name: 'Legend', emoji: '🏆', min: 76, max: 999999, commission: 40, color: '#fa709a' }
+            { id: 1, name: 'BRONZE', emoji: '🥉', min: 0, max: 4, commission: 25, color: '#cd7f32' },
+            { id: 2, name: 'SILVER', emoji: '🥈', min: 5, max: 14, commission: 30, color: '#c0c0c0' },
+            { id: 3, name: 'GOLD', emoji: '🥇', min: 15, max: 29, commission: 35, color: '#ffd700' },
+            { id: 4, name: 'PLATINUM', emoji: '💎', min: 30, max: 999999, commission: 40, color: '#e5e4e2' }
         ];
 
         // Get tier info based on total sales
@@ -948,10 +948,10 @@
 
         // Tier-based commission calculation
         function getTierCommission(totalSales) {
-            if (totalSales >= 76) return 0.40;  // Legend
-            if (totalSales >= 31) return 0.35;  // Ambassador
-            if (totalSales >= 11) return 0.30;  // Partner
-            return 0.25;  // Affiliate
+            if (totalSales >= 30) return 0.40;  // PLATINUM
+            if (totalSales >= 15) return 0.35;  // GOLD
+            if (totalSales >= 5) return 0.30;   // SILVER
+            return 0.25;  // BRONZE
         }
 
         // Update tier display
@@ -970,7 +970,7 @@
             // Update progress message
             const progressEl = document.getElementById('tierProgress');
             if (currentTier.id === 4) {
-                // Legend tier - maximum reached
+                // PLATINUM tier - maximum reached
                 progressEl.innerHTML = '🏆 Maximum tier reached! Keep up the great work!';
             } else {
                 const salesNeeded = nextTier.min - totalSales;
