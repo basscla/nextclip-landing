@@ -902,6 +902,14 @@
 
             <!-- Refgrow Embedded Widget -->
             <div id="refgrow" data-project-id="507" data-lang="en" style="max-width: 700px; margin: 0 auto; background: white; border-radius: 12px; padding: 30px;"></div>
+            <script>
+                // URL에서 email 파라미터 확인하여 자동 로그인
+                const urlParams = new URLSearchParams(window.location.search);
+                const emailParam = urlParams.get('email');
+                if (emailParam) {
+                    document.getElementById('refgrow').setAttribute('data-project-email', emailParam);
+                }
+            </script>
             <script src="https://scripts.refgrowcdn.com/page.js" async defer></script>
         </div>
     </section>
