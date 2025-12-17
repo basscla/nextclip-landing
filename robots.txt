@@ -3,6 +3,12 @@
 User-agent: *
 Allow: /
 
+# Block Cloudflare internal paths
+Disallow: /cdn-cgi/
+
+# Block non-existent search page
+Disallow: /search
+
 # Sitemaps
 Sitemap: https://nextclip.io/sitemap.xml
 
